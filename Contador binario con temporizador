@@ -16,6 +16,7 @@
 #define LEDY2 22 //Led amarillo del timer
 #define LEDR2 32 //Led rojo del timer
 #define LEDO2 33 //Led naranja del timer
+#define LEDalarm 25 //Led blanco para la alarma
 #define antiBounce 300 //Milisegundos para antirrebote
 
 //Prototipo de funciones
@@ -71,6 +72,7 @@ void setup() {
   pinMode(LEDY2, OUTPUT);
   pinMode(LEDR2, OUTPUT);
   pinMode(LEDO2, OUTPUT);
+  pinMode(LEDalarm, OUTPUT);
 }
 
 void loop() {
@@ -303,11 +305,23 @@ void loop() {
     digitalWrite(LEDR, HIGH);
     digitalWrite(LEDO, LOW);
   }
+  if(contador == 15){
+    digitalWrite(LEDB, HIGH);
+    digitalWrite(LEDY, HIGH);
+    digitalWrite(LEDR, HIGH);
+    digitalWrite(LEDO, HIGH);
+  }
+  
   if(timer > 15){
     timer = 0;
   }
-  if(timer == contador){ //Crear un ciclo entre los valores que puede alcanzar el timer.
+  if(timer == contador && digitalRead(LEDalarm) == LOW){ 
     timer = 0;
+    digitalWrite(LEDalarm, HIGH);
+  }
+  if(timer == contador && digitalRead(LEDalarm) == HIGH){ 
+    timer = 0;
+    digitalWrite(LEDalarm, LOW);
   }
   if(contador > 15){ //Crear un ciclo entre los valores que puede alcanzar el contador.
     contador = 0;
