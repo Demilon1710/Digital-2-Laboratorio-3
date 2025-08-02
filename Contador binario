@@ -6,12 +6,16 @@
 // put function declarations here:
 
 // Definir pines para leds y botones.
-#define LEDB 15 //Led azul
-#define LEDY 2 //Led amarillo
-#define LEDR 18 //Led rojo
-#define LEDO 19 //Led naranja
+#define LEDB 15 //Led azul del contador binario
+#define LEDY 2 //Led amarillo del contador binario
+#define LEDR 18 //Led rojo del contador binario
+#define LEDO 19 //Led naranja del contador binario
 #define BTN1 13 //Boton suma
 #define BTN2 12 //Boton resta
+#define LEDB2 23 //Led azul del timer
+#define LEDY2 22 //Led amarillo del timer
+#define LEDR2 32 //Led rojo del timer
+#define LEDO2 33 //Led naranja del timer
 #define antiBounce 300 //Milisegundos para antirrebote
 
 //Prototipo de funciones
@@ -19,13 +23,16 @@ void initBTN1(void);
 void IRAM_ATTR BTN1_ISR(void); //Funciones para interrupciones de los botones
 void initBTN2(void);
 void IRAM_ATTR BTN2_ISR(void);
+void initTMR0(void);
 
 //Variables globales
 volatile int32_t contador; //Se tomarán en cuenta valores negativos, por lo que son enteros de ambos signos.
+volatile uint32_t timer;
 volatile bool btn1ON; //Variable booleana para marcar que se presionó el botón.
 volatile uint32_t lastISRbtn1 = 0; //Última presionada del botón.
 volatile bool btn2ON;
 volatile uint32_t lastISRbtn2 = 0;
+hw_timer_t * Timer0_Cfg = NULL;
 
 void IRAM_ATTR BTN1_ISR(void){ //Función que permite el antirrebote.
   uint32_t tiempoActual = millis(); //Millis permite contar el tiempo desde el inicio del programa.
@@ -44,19 +51,158 @@ void IRAM_ATTR BTN2_ISR(void){ //Ciclo if para restar al contador si se cumplen 
   }
   }
 
+void IRAM_ATTR TMR0_ISR(void){
+  timer++;
+}
+
 void setup() {
   // Configurar pines como entradas o salidas
   Serial.begin(115200); //Iniciar la serialización para los comandos de texto.
   initBTN1();  //Llamar a la función para inicializar los botones.
   initBTN2();
+  initTMR0();
   contador = 0; //Darle un valor inicial a los contadores.
+  timer = 0;
   pinMode(LEDB, OUTPUT); //Indicar si los pines utilizados funcionarán como entradas o salidas.
   pinMode(LEDY, OUTPUT);
   pinMode(LEDR, OUTPUT);
   pinMode(LEDO, OUTPUT);
+  pinMode(LEDB2, OUTPUT);
+  pinMode(LEDY2, OUTPUT);
+  pinMode(LEDR2, OUTPUT);
+  pinMode(LEDO2, OUTPUT);
 }
 
 void loop() {
+  if(timer == 0){
+    digitalWrite(LEDB2, LOW);
+    digitalWrite(LEDY2, LOW);
+    digitalWrite(LEDR2, LOW);
+    digitalWrite(LEDO2, LOW);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 1){
+    digitalWrite(LEDB2, LOW);
+    digitalWrite(LEDY2, LOW);
+    digitalWrite(LEDR2, LOW);
+    digitalWrite(LEDO2, HIGH);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 2){
+    digitalWrite(LEDB2, LOW);
+    digitalWrite(LEDY2, LOW);
+    digitalWrite(LEDR2, HIGH);
+    digitalWrite(LEDO2, LOW);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 3){
+    digitalWrite(LEDB2, LOW);
+    digitalWrite(LEDY2, LOW);
+    digitalWrite(LEDR2, HIGH);
+    digitalWrite(LEDO2, HIGH);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 4){
+    digitalWrite(LEDB2, LOW);
+    digitalWrite(LEDY2, HIGH);
+    digitalWrite(LEDR2, LOW);
+    digitalWrite(LEDO2, LOW);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 5){
+    digitalWrite(LEDB2, LOW);
+    digitalWrite(LEDY2, HIGH);
+    digitalWrite(LEDR2, LOW);
+    digitalWrite(LEDO2, HIGH);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 6){
+    digitalWrite(LEDB2, LOW);
+    digitalWrite(LEDY2, HIGH);
+    digitalWrite(LEDR2, HIGH);
+    digitalWrite(LEDO2, LOW);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 7){
+    digitalWrite(LEDB2, LOW);
+    digitalWrite(LEDY2, HIGH);
+    digitalWrite(LEDR2, HIGH);
+    digitalWrite(LEDO2, HIGH);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 8){
+    digitalWrite(LEDB2, HIGH);
+    digitalWrite(LEDY2, LOW);
+    digitalWrite(LEDR2, LOW);
+    digitalWrite(LEDO2, LOW);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 9){
+    digitalWrite(LEDB2, HIGH);
+    digitalWrite(LEDY2, LOW);
+    digitalWrite(LEDR2, LOW);
+    digitalWrite(LEDO2, HIGH);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 10){
+    digitalWrite(LEDB2, HIGH);
+    digitalWrite(LEDY2, LOW);
+    digitalWrite(LEDR2, HIGH);
+    digitalWrite(LEDO2, LOW);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 11){
+    digitalWrite(LEDB2, HIGH);
+    digitalWrite(LEDY2, LOW);
+    digitalWrite(LEDR2, HIGH);
+    digitalWrite(LEDO2, HIGH);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 12){
+    digitalWrite(LEDB2, HIGH);
+    digitalWrite(LEDY2, HIGH);
+    digitalWrite(LEDR2, LOW);
+    digitalWrite(LEDO2, LOW);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 13){
+    digitalWrite(LEDB2, HIGH);
+    digitalWrite(LEDY2, HIGH);
+    digitalWrite(LEDR2, LOW);
+    digitalWrite(LEDO2, HIGH);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 14){
+    digitalWrite(LEDB2, HIGH);
+    digitalWrite(LEDY2, HIGH);
+    digitalWrite(LEDR2, HIGH);
+    digitalWrite(LEDO2, LOW);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+  if(timer == 15){
+    digitalWrite(LEDB2, HIGH);
+    digitalWrite(LEDY2, HIGH);
+    digitalWrite(LEDR2, HIGH);
+    digitalWrite(LEDO2, HIGH);
+    Serial.println("Temporizador >"); //Print serial para probar el funcionamiento del temporizador
+    Serial.println(timer);
+  }
+
   if(btn1ON){
   btn1ON = false;
   Serial.println("Se ha sumado >"); //Print serial para probar el funcionamiento del botón
@@ -169,7 +315,9 @@ void loop() {
   if(contador < 0){
     contador = 15;
   }
-   
+  if(timer > 15){ //Crear un ciclo entre los valores que puede alcanzar el timer.
+    timer = 0;
+  }
   } 
 
 void initBTN1(void){
@@ -180,4 +328,17 @@ void initBTN1(void){
 void initBTN2(void){
   pinMode(BTN2, INPUT_PULLDOWN);
   attachInterrupt(BTN2, &BTN2_ISR, RISING);
+}
+void initTMR0(void){
+  //Configura Timer 0, con prescaler de 40, en flanco de subida
+  Timer0_Cfg = timerBegin(0, 40, true);
+
+  //Configurar Handler ISR
+  timerAttachInterrupt(Timer0_Cfg, &TMR0_ISR, true);
+
+  //Paso 4. Configurar alarma (Timer ticks)
+  timerAlarmWrite(Timer0_Cfg, 500000, true);
+
+  //Paso 5. Iniciar la alarma
+  timerAlarmEnable(Timer0_Cfg);
 }
