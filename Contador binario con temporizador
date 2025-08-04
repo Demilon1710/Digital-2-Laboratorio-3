@@ -18,6 +18,7 @@
 #define LEDO2 33 //Led naranja del timer
 #define LEDalarm 25 //Led blanco para la alarma
 #define antiBounce 300 //Milisegundos para antirrebote
+int touch = 0;
 
 //Prototipo de funciones
 void initBTN1(void);
@@ -332,7 +333,12 @@ void loop() {
   if(contador == 0){
     timer = 0;
   }
-  } 
+  touch = touchRead(T7);
+  if(touch < 80){ //Se realizó un serial print para determinar que la capacitancia regular era 85, y al tocar el cable, bajaba hasta 22.
+    timer = 0;
+  }
+  
+}
 
 void initBTN1(void){
   //Funciones para denominar a los botones con su tipo de entrada y su interruptor.
